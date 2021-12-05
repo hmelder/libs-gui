@@ -236,6 +236,7 @@
 // Methods to override for specific layouts...
 - (void) prepareLayout
 {
+  // abstract method implements nothing...
 }
 
 - (NSArray *) layoutAttributesForElementsInRect: (NSRect)rect

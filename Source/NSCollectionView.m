@@ -621,18 +621,47 @@ static NSString *placeholderItem = nil;
           
       if ([aCoder allowsKeyedCoding])
         {
-          _minItemSize = [aCoder decodeSizeForKey: NSCollectionViewMinItemSizeKey];
-          _maxItemSize = [aCoder decodeSizeForKey: NSCollectionViewMaxItemSizeKey];
+          if ([aCoder containsValueForKey: NSCollectionViewMinItemSizeKey])
+            {
+              _minItemSize = [aCoder decodeSizeForKey: NSCollectionViewMinItemSizeKey];
+            }
           
-          _maxNumberOfRows = [aCoder decodeInt64ForKey: NSCollectionViewMaxNumberOfRowsKey];
-          _maxNumberOfColumns = [aCoder decodeInt64ForKey: NSCollectionViewMaxNumberOfColumnsKey];
+          if ([aCoder containsValueForKey: NSCollectionViewMaxItemSizeKey])
+            {
+              _maxItemSize = [aCoder decodeSizeForKey: NSCollectionViewMaxItemSizeKey];
+            }
+          
+          if ([aCoder containsValueForKey: NSCollectionViewMaxNumberOfRowsKey])
+            {
+              _maxNumberOfRows = [aCoder decodeInt64ForKey: NSCollectionViewMaxNumberOfRowsKey];
+            }
+          
+          if ([aCoder containsValueForKey: NSCollectionViewMaxNumberOfColumnsKey])
+            {
+              _maxNumberOfColumns = [aCoder decodeInt64ForKey: NSCollectionViewMaxNumberOfColumnsKey];
+            }
           
           //_verticalMargin = [aCoder decodeFloatForKey: NSCollectionViewVerticalMarginKey];
           
-          _isSelectable = [aCoder decodeBoolForKey: NSCollectionViewSelectableKey];
-          _allowsMultipleSelection = [aCoder decodeBoolForKey: NSCollectionViewAllowsMultipleSelectionKey];
+          if ([aCoder containsValueForKey: NSCollectionViewSelectableKey])
+            {
+              _isSelectable = [aCoder decodeBoolForKey: NSCollectionViewSelectableKey];
+            }
           
-          [self setBackgroundColors: [aCoder decodeObjectForKey: NSCollectionViewBackgroundColorsKey]];
+          if ([aCoder containsValueForKey: NSCollectionViewAllowsMultipleSelectionKey])
+            {
+              _allowsMultipleSelection = [aCoder decodeBoolForKey: NSCollectionViewAllowsMultipleSelectionKey];
+            }
+          
+          if ([aCoder containsValueForKey: NSCollectionViewBackgroundColorsKey])
+            {
+              [self setBackgroundColors: [aCoder decodeObjectForKey: NSCollectionViewBackgroundColorsKey]];
+            }
+          
+          if ([aCoder containsValueForKey: NSCollectionViewLayoutKey])
+            {
+              _collectionViewLayout = [aCoder decodeObjectForKey: NSCollectionViewLayoutKey];
+            }
         }
       else
         {
@@ -642,6 +671,7 @@ static NSString *placeholderItem = nil;
           decode_NSUInteger(aCoder, &_maxNumberOfColumns);
           [aCoder decodeValueOfObjCType: @encode(BOOL) at: &_isSelectable];
           [self setBackgroundColors: [aCoder decodeObject]]; // decode color...
+          [self setCollectionViewLayout: [aCoder decodeObject]];
         }
     }
   [self _initDefaults];
@@ -677,6 +707,9 @@ static NSString *placeholderItem = nil;
       //[aCoder encodeCGFloat: _verticalMargin forKey: NSCollectionViewVerticalMarginKey];
       [aCoder encodeObject: _backgroundColors 
                     forKey: NSCollectionViewBackgroundColorsKey];
+
+      [aCoder encodeObject: _collectionViewLayout
+                    forKey: NSCollectionViewLayoutKey];
     }
   else
     {
@@ -686,6 +719,7 @@ static NSString *placeholderItem = nil;
       encode_NSUInteger(aCoder, &_maxNumberOfColumns);
       [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_isSelectable];      
       [aCoder encodeObject: [self backgroundColors]]; // encode color...
+      [aCoder encodeObject: [self collectionViewLayout]];
     }
 }
 
