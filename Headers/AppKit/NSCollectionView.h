@@ -84,27 +84,87 @@ typedef NSString *NSCollectionViewSupplementaryElementKind;
 
 @protocol NSCollectionViewDelegate <NSObject>
 
-- (NSImage *)collectionView:(NSCollectionView *)collectionView
-draggingImageForItemsAtIndexes:(NSIndexSet *)indexes
-                  withEvent:(NSEvent *)event
-                     offset:(NSPointPointer)dragImageOffset;
-- (BOOL)collectionView:(NSCollectionView *)collectionView
-   writeItemsAtIndexes:(NSIndexSet *)indexes
-          toPasteboard:(NSPasteboard *)pasteboard;
-- (BOOL)collectionView:(NSCollectionView *)collectionView
- canDragItemsAtIndexes:(NSIndexSet *)indexes
-             withEvent:(NSEvent *)event;
-- (NSDragOperation)collectionView:(NSCollectionView *)collectionView
-                     validateDrop:(id < NSDraggingInfo >)draggingInfo
-                    proposedIndex:(NSInteger *)proposedDropIndex
-                    dropOperation:(NSCollectionViewDropOperation *)proposedDropOperation;
-- (BOOL)collectionView:(NSCollectionView *)collectionView
-            acceptDrop:(id < NSDraggingInfo >)draggingInfo
-                 index:(NSInteger)index
-         dropOperation:(NSCollectionViewDropOperation)dropOperation;
-- (NSArray *)collectionView:(NSCollectionView *)collectionView
-namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropURL
-   forDraggedItemsAtIndexes:(NSIndexSet *)indexes;
+#if GS_PROTOCOLS_HAVE_OPTIONAL
+@optional
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (BOOL) collectionView: (NSCollectionView *)collectionView
+         canDragItemsAtIndexPaths: (NSSet *)indexPaths
+              withEvent: (NSEvent *)event;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
+- (BOOL) collectionView: (NSCollectionView *)collectionView
+  canDragItemsAtIndexes: (NSIndexSet *)indexes
+              withEvent: (NSEvent *)event;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (BOOL) collectionView: (NSCollectionView *)collectionView
+         writeItemsAtIndexPaths: (NSSet *)indexPaths
+           toPasteboard: (NSPasteboard *)pasteboard;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
+- (BOOL) collectionView: (NSCollectionView *)collectionView
+    writeItemsAtIndexes: (NSIndexSet *)indexes
+           toPasteboard: (NSPasteboard *)pasteboard;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (NSArray *) collectionView: (NSCollectionView *)collectionView
+              namesOfPromisedFilesDroppedAtDestination: (NSURL *)dropURL
+ forDraggedItemsAtIndexPaths: (NSSet *)indexPaths;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
+- (NSArray *) collectionView: (NSCollectionView *)collectionView
+              namesOfPromisedFilesDroppedAtDestination: (NSURL *)dropURL
+    forDraggedItemsAtIndexes: (NSIndexSet *)indexes;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (NSImage *) collectionView: (NSCollectionView *)collectionView
+              draggingImageForItemsAtIndexPaths: (NSSet *)indexPaths
+                   withEvent: (NSEvent *)event
+                      offset: (NSPointPointer)dragImageOffset;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
+- (NSImage *) collectionView: (NSCollectionView *)collectionView
+              draggingImageForItemsAtIndexes: (NSIndexSet *)indexes
+                   withEvent: (NSEvent *)event
+                      offset: (NSPointPointer)dragImageOffset;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (NSDragOperation) collectionView: (NSCollectionView *)collectionView
+                      validateDrop: (id < NSDraggingInfo >)draggingInfo
+                 proposedIndexPath: (NSIndexPath **)proposedDropIndexPath
+                     dropOperation: (NSCollectionViewDropOperation *)proposedDropOperation;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
+- (NSDragOperation) collectionView: (NSCollectionView *)collectionView
+                      validateDrop: (id < NSDraggingInfo >)draggingInfo
+                     proposedIndex: (NSInteger *)proposedDropIndex
+                     dropOperation: (NSCollectionViewDropOperation *)proposedDropOperation;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (BOOL) collectionView: (NSCollectionView *)collectionView
+             acceptDrop: (id < NSDraggingInfo >)draggingInfo
+              indexPath: (NSIndexPath *)indexPath
+          dropOperation: (NSCollectionViewDropOperation)dropOperation;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
+- (BOOL) collectionView: (NSCollectionView *)collectionView
+             acceptDrop: (id < NSDraggingInfo >)draggingInfo
+                  index: (NSInteger)index
+          dropOperation: (NSCollectionViewDropOperation)dropOperation;
+#endif
 
 @end
 
