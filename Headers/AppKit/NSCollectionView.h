@@ -37,12 +37,14 @@
 #import <AppKit/NSDragging.h>
 #import <AppKit/NSNibDeclarations.h>
 #import <AppKit/NSView.h>
-#import <AppKit/NSPasteboard.h>
 
 @class NSCollectionViewItem;
 @class NSCollectionView;
 @class NSCollectionViewLayout;
 @class NSCollectionViewTransitionLayout;
+@class NSPasteboard;
+
+@protocol NSPasteboardWriting;
 
 enum
 {  
