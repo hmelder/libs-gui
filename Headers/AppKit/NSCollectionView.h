@@ -48,6 +48,40 @@ typedef NSInteger NSCollectionViewDropOperation;
 
 typedef NSString *NSCollectionViewSupplementaryElementKind;
 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+@protocol NSCollectionViewDataSource <NSObject>
+#if GS_PROTOCOLS_HAVE_OPTIONAL
+@required
+#endif
+- (NSInteger) collectionView: (NSCollectionView *)collectionView
+      numberOfItemsInSection: (NSInteger)section;
+
+- (NSCollectionViewItem *) collectionView: (NSCollectionView *)collectionView
+      itemForRepresentedObjectAtIndexPath: (NSIndexPath *)indexPath;
+#if GS_PROTOCOLS_HAVE_OPTIONAL
+@optional
+#endif
+- (NSInteger) numberOfSectionsInCollectionView: (NSCollectionView *)collectionView;
+
+- (NSView *) collectionView: (NSCollectionView *)collectionView
+             viewForSupplementaryElementOfKind: (NSCollectionViewSupplementaryElementKind)kind
+                atIndexPath:(NSIndexPath *)indexPath;
+@end
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+@protocol NSCollectionViewPrefetching <NSObject>
+#if GS_PROTOCOLS_HAVE_OPTIONAL
+@required
+#endif
+- (void)collectionView:(NSCollectionView *)collectionView prefetchItemsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths;
+#if GS_PROTOCOLS_HAVE_OPTIONAL
+@optional
+#endif
+- (void)collectionView:(NSCollectionView *)collectionView cancelPrefetchingForItemsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths;
+@end
+#endif
+
 @protocol NSCollectionViewDelegate <NSObject>
 
 - (NSImage *)collectionView:(NSCollectionView *)collectionView

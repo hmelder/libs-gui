@@ -666,13 +666,6 @@ static NSString *placeholderItem = nil;
             {
               [self setCollectionViewLayout: [aCoder decodeObjectForKey: NSCollectionViewLayoutKey]];
             }
-          else
-            {
-              NSCollectionViewLayout *layout = AUTORELEASE( [[NSCollectionViewGridLayout alloc] init] );
-
-              // grid is the default, per Cocoa specs.
-              [self setCollectionViewLayout: layout];
-            }
         }
       else
         {
@@ -683,13 +676,6 @@ static NSString *placeholderItem = nil;
           [aCoder decodeValueOfObjCType: @encode(BOOL) at: &_isSelectable];
           [self setBackgroundColors: [aCoder decodeObject]]; // decode color...
           [self setCollectionViewLayout: [aCoder decodeObject]];
-          if ([self collectionViewLayout] == nil)
-            {
-              NSCollectionViewLayout *layout = AUTORELEASE( [[NSCollectionViewGridLayout alloc] init] );
-
-              // grid is the default, per Cocoa specs.
-              [self setCollectionViewLayout: layout];
-            }
         }
     }
   [self _initDefaults];
