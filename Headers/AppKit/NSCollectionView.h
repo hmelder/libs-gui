@@ -1,11 +1,14 @@
 /* -*-objc-*-
    NSCollectionView.h
 
-   Copyright (C) 2013 Free Software Foundation, Inc.
+   Copyright (C) 2013,2021 Free Software Foundation, Inc.
 
    Author: Doug Simons (doug.simons@testplant.com)
            Frank LeGrand (frank.legrand@testplant.com)
-   Date: February 2013
+           Gregory Casamento (greg.casamento@gmail.com)
+           (Adding new delegate methods and support for layouts)
+
+   Date: February 2013, December 2021
    
    This file is part of the GNUstep GUI Library.
 
@@ -34,10 +37,12 @@
 #import <AppKit/NSDragging.h>
 #import <AppKit/NSNibDeclarations.h>
 #import <AppKit/NSView.h>
+#import <AppKit/NSPasteboard.h>
 
 @class NSCollectionViewItem;
 @class NSCollectionView;
 @class NSCollectionViewLayout;
+@class NSCollectionViewTransitionLayout;
 
 enum
 {  
@@ -45,6 +50,16 @@ enum
   NSCollectionViewDropBefore = 1,
 };
 typedef NSInteger NSCollectionViewDropOperation;
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+enum {
+  NSCollectionViewItemHighlightNone = 0,
+  NSCollectionViewItemHighlightForSelection = 1,
+  NSCollectionViewItemHighlightForDeselection = 2,
+  NSCollectionViewItemHighlightAsDropTarget = 3,
+};
+typedef NSInteger NSCollectionViewItemHighlightState;
+#endif
 
 typedef NSString *NSCollectionViewSupplementaryElementKind;
 
@@ -166,8 +181,83 @@ typedef NSString *NSCollectionViewSupplementaryElementKind;
           dropOperation: (NSCollectionViewDropOperation)dropOperation;
 #endif
 
-@end
+/* Multi-image drag and drop */
 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (id <NSPasteboardWriting>) collectionView: (NSCollectionView *)collectionView
+         pasteboardWriterForItemAtIndexPath: (NSIndexPath *)indexPath;
+#endif
+
+- (id <NSPasteboardWriting>) collectionView: (NSCollectionView *)collectionView
+             pasteboardWriterForItemAtIndex: (NSUInteger)index;
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (void) collectionView: (NSCollectionView *)collectionView
+        draggingSession: (NSDraggingSession *)session
+       willBeginAtPoint: (NSPoint)screenPoint
+   forItemsAtIndexPaths: (NSSet *)indexPaths;
+#endif
+
+- (void) collectionView: (NSCollectionView *)collectionView
+        draggingSession: (NSDraggingSession *)session
+       willBeginAtPoint: (NSPoint)screenPoint
+      forItemsAtIndexes: (NSIndexSet *)indexes;
+
+- (void) collectionView: (NSCollectionView *)collectionView
+        draggingSession: (NSDraggingSession *)session
+           endedAtPoint: (NSPoint)screenPoint
+          dragOperation: (NSDragOperation)operation;
+
+- (void) collectionView: (NSCollectionView *)collectionView
+         updateDraggingItemsForDrag: (id <NSDraggingInfo>)draggingInfo;
+
+/*** Selection and Highlighting ***/
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (NSSet *) collectionView: (NSCollectionView *)collectionView
+            shouldChangeItemsAtIndexPaths: (NSSet *)indexPaths
+          toHighlightState: (NSCollectionViewItemHighlightState)highlightState;
+
+- (void) collectionView: (NSCollectionView *)collectionView
+         didChangeItemsAtIndexPaths: (NSSet *)indexPaths
+       toHighlightState: (NSCollectionViewItemHighlightState)highlightState;
+
+- (NSSet *) collectionView: (NSCollectionView *)collectionView
+shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
+
+- (NSSet *) collectionView: (NSCollectionView *)collectionView shouldDeselectItemsAtIndexPaths: (NSSet *)indexPaths;
+
+- (void) collectionView: (NSCollectionView *)collectionView didSelectItemsAtIndexPaths: (NSSet *)indexPaths;
+
+- (void) collectionView: (NSCollectionView *)collectionView didDeselectItemsAtIndexPaths: (NSSet *)indexPaths;
+
+/*** Display Notification ***/
+
+- (void) collectionView: (NSCollectionView *)collectionView
+        willDisplayItem: (NSCollectionViewItem *)item
+        forRepresentedObjectAtIndexPath: (NSIndexPath *)indexPath;
+
+- (void) collectionView: (NSCollectionView *)collectionView
+         willDisplaySupplementaryView: (NSView *)view
+         forElementKind: (NSCollectionViewSupplementaryElementKind)elementKind
+            atIndexPath: (NSIndexPath *)indexPath;
+
+- (void) collectionView: (NSCollectionView *)collectionView
+   didEndDisplayingItem: (NSCollectionViewItem *)item
+   forRepresentedObjectAtIndexPath: (NSIndexPath *)indexPath;
+
+- (void) collectionView: (NSCollectionView *)collectionView
+         didEndDisplayingSupplementaryView: (NSView *)view
+       forElementOfKind: (NSCollectionViewSupplementaryElementKind)elementKind
+            atIndexPath: (NSIndexPath *)indexPath;
+
+/*** Layout Transition Support ***/
+
+- (NSCollectionViewTransitionLayout *) collectionView: (NSCollectionView *)collectionView
+                         transitionLayoutForOldLayout: (NSCollectionViewLayout *)fromLayout
+                                            newLayout: (NSCollectionViewLayout *)toLayout;
+#endif
+@end
 
 @interface NSCollectionView : NSView //<NSDraggingDestination, NSDraggingSource>
 {
@@ -209,7 +299,7 @@ typedef NSString *NSCollectionViewSupplementaryElementKind;
 - (void) setBackgroundColors: (NSArray *)colors;
 
 - (NSArray *)content;
-- (void)setContent:(NSArray *)content;
+- (void)setContent: (NSArray *)content;
 
 - (id < NSCollectionViewDelegate >) delegate;
 - (void) setDelegate: (id < NSCollectionViewDelegate >)aDelegate;
@@ -242,7 +332,7 @@ typedef NSString *NSCollectionViewSupplementaryElementKind;
 
 - (NSRect) frameForItemAtIndex: (NSUInteger)index;
 - (NSCollectionViewItem *) itemAtIndex: (NSUInteger)index;
-- (NSCollectionViewItem *) newItemForRepresentedObject:(id)object;
+- (NSCollectionViewItem *) newItemForRepresentedObject: (id)object;
 
 - (void) tile;
 
