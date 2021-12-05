@@ -74,11 +74,11 @@ typedef NSString *NSCollectionViewSupplementaryElementKind;
 #if GS_PROTOCOLS_HAVE_OPTIONAL
 @required
 #endif
-- (void)collectionView:(NSCollectionView *)collectionView prefetchItemsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths;
+- (void)collectionView:(NSCollectionView *)collectionView prefetchItemsAtIndexPaths:(NSArray *)indexPaths;
 #if GS_PROTOCOLS_HAVE_OPTIONAL
 @optional
 #endif
-- (void)collectionView:(NSCollectionView *)collectionView cancelPrefetchingForItemsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths;
+- (void)collectionView:(NSCollectionView *)collectionView cancelPrefetchingForItemsAtIndexPaths:(NSArray *)indexPaths;
 @end
 #endif
 
