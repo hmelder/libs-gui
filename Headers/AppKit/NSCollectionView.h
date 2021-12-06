@@ -43,6 +43,7 @@
 @class NSCollectionViewLayout;
 @class NSCollectionViewTransitionLayout;
 @class NSPasteboard;
+@class NSNib;
 
 @protocol NSPasteboardWriting;
 
@@ -61,9 +62,35 @@ enum {
   NSCollectionViewItemHighlightAsDropTarget = 3,
 };
 typedef NSInteger NSCollectionViewItemHighlightState;
+
+enum {
+  NSCollectionViewScrollPositionNone                 = 0,
+  
+  /*
+   * Vertical positions are mutually exclusive to each other, but are bitwise or-able with 
+   * the horizontal scroll positions.  Combining positions from the same grouping   
+   * (horizontal or vertical) will result in an NSInvalidArgumentException.
+   */
+  NSCollectionViewScrollPositionTop                   = 1 << 0,
+  NSCollectionViewScrollPositionCenteredVertically    = 1 << 1,
+  NSCollectionViewScrollPositionBottom                = 1 << 2,
+  NSCollectionViewScrollPositionNearestHorizontalEdge = 1 << 9, /* Nearer of Top,Bottom */
+  
+  /*
+   * Likewise, the horizontal positions are mutually exclusive to each other.
+   */
+  NSCollectionViewScrollPositionLeft                 = 1 << 3,
+  NSCollectionViewScrollPositionCenteredHorizontally = 1 << 4,
+  NSCollectionViewScrollPositionRight                = 1 << 5,
+  NSCollectionViewScrollPositionLeadingEdge          = 1 << 6, /* Left if LTR, Right if RTL */
+  NSCollectionViewScrollPositionTrailingEdge         = 1 << 7, /* Right if LTR, Left, if RTL */
+  NSCollectionViewScrollPositionNearestVerticalEdge  = 1 << 8, /* Nearer of Leading,Trailing */
+};
+typedef NSUInteger NSCollectionViewScrollPosition;
 #endif
 
 typedef NSString *NSCollectionViewSupplementaryElementKind;
+typedef NSString *NSUserInterfaceItemIdentifier;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
 @protocol NSCollectionViewDataSource <NSObject>
@@ -213,7 +240,7 @@ typedef NSString *NSCollectionViewSupplementaryElementKind;
 - (void) collectionView: (NSCollectionView *)collectionView
          updateDraggingItemsForDrag: (id <NSDraggingInfo>)draggingInfo;
 
-/*** Selection and Highlighting ***/
+/* Selection and Highlighting */
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
 - (NSSet *) collectionView: (NSCollectionView *)collectionView
@@ -233,7 +260,7 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
 
 - (void) collectionView: (NSCollectionView *)collectionView didDeselectItemsAtIndexPaths: (NSSet *)indexPaths;
 
-/*** Display Notification ***/
+/* Display Notification */
 
 - (void) collectionView: (NSCollectionView *)collectionView
         willDisplayItem: (NSCollectionViewItem *)item
@@ -253,7 +280,7 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
        forElementOfKind: (NSCollectionViewSupplementaryElementKind)elementKind
             atIndexPath: (NSIndexPath *)indexPath;
 
-/*** Layout Transition Support ***/
+/* Layout Transition Support */
 
 - (NSCollectionViewTransitionLayout *) collectionView: (NSCollectionView *)collectionView
                          transitionLayoutForOldLayout: (NSCollectionViewLayout *)fromLayout
@@ -345,6 +372,54 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
                                    withEvent: (NSEvent *)event
                                       offset: (NSPointPointer)dragImageOffset;
 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+
+/* Locating Items and Views */
+
+- (NSArray *) visibleItems;
+
+- (NSSet *) indexPathsForVisibleItems;
+
+- (NSArray *) visibleSupplementaryViewsOfKind: (NSCollectionViewSupplementaryElementKind)elementKind;
+
+- (NSSet *) indexPathsForVisibleSupplementaryElementsOfKind: (NSCollectionViewSupplementaryElementKind)elementKind;
+
+- (NSIndexPath *) indexPathForItem: (NSCollectionViewItem *)item;
+
+- (NSIndexPath *) indexPathForItemAtPoint: (NSPoint)point;
+
+- (NSCollectionViewItem *) itemAtIndexPath: (NSIndexPath *)indexPath;
+
+- (NSView *)supplementaryViewForElementKind: (NSCollectionViewSupplementaryElementKind)elementKind 
+                                atIndexPath: (NSIndexPath *)indexPath;
+
+- (void) scrollToItemsAtIndexPaths: (NSSet *)indexPaths 
+                    scrollPosition: (NSCollectionViewScrollPosition)scrollPosition;
+
+/* Creating Collection view Items */
+
+- (NSCollectionViewItem *) makeItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier 
+                                     forIndexPath: (NSIndexPath *)indexPath;
+
+- (void) registerClass: (Class)itemClass 
+ forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier;
+
+- (void) registerNib: (NSNib *)nib 
+ forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier;
+
+- (NSView *) makeSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)elementKind 
+                          withIdentifier: (NSUserInterfaceItemIdentifier)identifier 
+                            forIndexPath: (NSIndexPath *)indexPath;
+
+- (void)registerClass: (Class)viewClass 
+        forSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)kind 
+       withIdentifier:(NSUserInterfaceItemIdentifier)identifier;
+
+- (void) registerNib: (NSNib *)nib 
+         forSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)kind 
+      withIdentifier: (NSUserInterfaceItemIdentifier)identifier;
+
+#endif
 
 @end
 
