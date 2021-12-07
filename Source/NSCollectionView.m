@@ -258,12 +258,12 @@ static NSString *placeholderItem = nil;
 
 - (id < NSCollectionViewDelegate >) delegate
 {
-  return delegate;
+  return _delegate;
 }
 
 - (void) setDelegate: (id < NSCollectionViewDelegate >)aDelegate
 {
-  delegate = aDelegate;
+  _delegate = aDelegate;
 }
 
 - (NSCollectionViewItem *) itemPrototype
@@ -1010,12 +1010,12 @@ static NSString *placeholderItem = nil;
   if (![dragIndexes count])
     return NO;
   
-  if (![delegate respondsToSelector: @selector(collectionView:writeItemsAtIndexes:toPasteboard:)])
+  if (![_delegate respondsToSelector: @selector(collectionView:writeItemsAtIndexes:toPasteboard:)])
     return NO;
   
-  if ([delegate respondsToSelector: @selector(collectionView:canDragItemsAtIndexes:withEvent:)])
+  if ([_delegate respondsToSelector: @selector(collectionView:canDragItemsAtIndexes:withEvent:)])
     {
-      if (![delegate collectionView: self
+      if (![_delegate collectionView: self
               canDragItemsAtIndexes: dragIndexes
                           withEvent: event])
         {
@@ -1050,9 +1050,9 @@ static NSString *placeholderItem = nil;
                                    withEvent: (NSEvent *)event 
                                       offset: (NSPointPointer)dragImageOffset
 {
-  if ([delegate respondsToSelector: @selector(collectionView:draggingImageForItemsAtIndexes:withEvent:offset:)])
+  if ([_delegate respondsToSelector: @selector(collectionView:draggingImageForItemsAtIndexes:withEvent:offset:)])
     {
-      return [delegate collectionView: self
+      return [_delegate collectionView: self
                        draggingImageForItemsAtIndexes: indexes
                             withEvent: event
                                offset: dragImageOffset];
@@ -1066,13 +1066,13 @@ static NSString *placeholderItem = nil;
 - (BOOL) _writeItemsAtIndexes: (NSIndexSet *)indexes 
                  toPasteboard: (NSPasteboard *)pasteboard
 {
-  if (![delegate respondsToSelector: @selector(collectionView:writeItemsAtIndexes:toPasteboard:)])
+  if (![_delegate respondsToSelector: @selector(collectionView:writeItemsAtIndexes:toPasteboard:)])
     {
       return NO;
     }
   else
     {
-      return [delegate collectionView: self
+      return [_delegate collectionView: self
                   writeItemsAtIndexes: indexes
                          toPasteboard: pasteboard];
     }
@@ -1088,7 +1088,7 @@ static NSString *placeholderItem = nil;
 {
   NSDragOperation result = NSDragOperationNone;
   
-  if ([delegate respondsToSelector: @selector(collectionView:validateDrop:proposedIndex:dropOperation:)])
+  if ([_delegate respondsToSelector: @selector(collectionView:validateDrop:proposedIndex:dropOperation:)])
     {
       NSPoint location = [self convertPoint: [sender draggingLocation] fromView: nil];
       NSInteger index = [self _indexAtPoint: location];
@@ -1101,7 +1101,7 @@ static NSString *placeholderItem = nil;
       
       // TODO: We currently don't do anything with the proposedIndex & dropOperation that
       // may get altered by the delegate.
-      result = [delegate collectionView: self
+      result = [_delegate collectionView: self
                            validateDrop: sender
                           proposedIndex: proposedIndex
                           dropOperation: dropOperation];
@@ -1149,10 +1149,10 @@ static NSString *placeholderItem = nil;
   index = (index > [_items count] - 1) ? [_items count] - 1 : index;
   
   BOOL result = NO;
-  if ([delegate respondsToSelector: @selector(collectionView:acceptDrop:index:dropOperation:)])
+  if ([_delegate respondsToSelector: @selector(collectionView:acceptDrop:index:dropOperation:)])
     {
       // TODO: dropOperation should be retrieved from the validateDrop delegate method.
-      result = [delegate collectionView: self
+      result = [_delegate collectionView: self
                              acceptDrop: sender
                                   index: index
                           dropOperation: NSCollectionViewDropOn];

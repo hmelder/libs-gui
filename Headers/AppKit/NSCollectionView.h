@@ -299,8 +299,10 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
   NSIndexSet *_selectionIndexes;
   
   NSArray *_backgroundColors;
-  IBOutlet id <NSCollectionViewDelegate> delegate;
-  
+  IBOutlet id <NSCollectionViewDelegate> _delegate;
+  IBOutlet id <NSCollectionViewDataSource> _dataSource;
+  IBOutlet NSView *_backgroundView;
+
   NSSize _itemSize;
   NSSize _maxItemSize;
   NSSize _minItemSize;
@@ -319,6 +321,7 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
   NSUInteger _draggingOnIndex;
 
   NSCollectionViewLayout *_collectionViewLayout;
+  BOOL _backgroundViewScrollsWithContent;
 }
 
 - (BOOL) allowsMultipleSelection;
@@ -327,8 +330,8 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
 - (NSArray *) backgroundColors;
 - (void) setBackgroundColors: (NSArray *)colors;
 
-- (NSArray *)content;
-- (void)setContent: (NSArray *)content;
+- (NSArray *) content;
+- (void) setContent: (NSArray *)content;
 
 - (id < NSCollectionViewDelegate >) delegate;
 - (void) setDelegate: (id < NSCollectionViewDelegate >)aDelegate;
@@ -373,7 +376,6 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
                                       offset: (NSPointPointer)dragImageOffset;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
-
 /* Locating Items and Views */
 
 - (NSArray *) visibleItems;
@@ -418,6 +420,48 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
 - (void) registerNib: (NSNib *)nib 
          forSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)kind 
       withIdentifier: (NSUserInterfaceItemIdentifier)identifier;
+
+/* Providing the collection view's data */
+
+- (id<NSCollectionViewDataSource>) dataSource;
+
+- (void) setDataSource: (id<NSCollectionViewDataSource>)dataSource;
+
+/* Configuring the Collection view */
+
+- (NSView *) backgroundView;
+
+- (void) setBackgroundView: (NSView *)backgroundView;
+
+- (BOOL) backgroundViewScrollsWithContent;
+
+/* Reloading Content */
+
+- (void) reloadData;
+
+- (void) reloadSections: (NSIndexSet *)sections;
+
+- (void) reloadItemsAtIndexPaths: (NSSet *)indexPaths;
+
+/* Prefetching Collection View Cells and Data */
+
+- (id<NSCollectionViewPrefetching>) prefetchDataSource;
+
+- (void) setPrefetchDataSource: (id<NSCollectionViewPrefetching>)prefetchDataSource;
+
+/* Getting the State of the Collection View */
+
+- (NSInteger) numberOfSections;
+
+- (NSInteger) numberOfItemsInSection: (NSInteger)section;
+
+/* Inserting, Moving, Deleting and Collapsing Sections */
+
+- (void) insertSections: (NSIndexSet *)sections;
+
+- (void) moveSection: (NSInteger)section 
+           toSection: (NSInteger)newSection;
+
 
 #endif
 
