@@ -41,6 +41,7 @@
 @class NSCollectionViewItem;
 @class NSCollectionView;
 @class NSCollectionViewLayout;
+@class NSCollectionViewLayoutAttributes;
 @class NSCollectionViewTransitionLayout;
 @class NSPasteboard;
 @class NSNib;
@@ -484,6 +485,30 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
 
 - (void) setAllowsEmptySelection: (BOOL)flag;
 
+- (NSSet *) selectionIndexPaths; // copy
+
+- (IBAction) selectAll: (id)sender;
+
+- (IBAction) deselectAll: (id)sender;
+
+- (void) selectItemsAtIndexPaths: (NSSet *)indexPaths 
+                  scrollPosition: (NSCollectionViewScrollPosition)scrollPosition;
+
+- (void) deselectItemsAtIndexPaths: (NSSet *)indexPaths;
+
+/* Getting Layout Information */
+
+- (NSCollectionViewLayoutAttributes *) layoutAttributesForItemAtIndexPath: (NSIndexPath *)indexPath;
+
+- (NSCollectionViewLayoutAttributes *) layoutAttributesForSupplementaryElementOfKind: (NSCollectionViewSupplementaryElementKind)kind 
+                                                                         atIndexPath: (NSIndexPath *)indexPath;
+/* Animating Multiple Changes */
+
+DEFINE_BLOCK_TYPE_NO_ARGS(GSCollectionViewPerformBatchUpdatesBlock, void);
+DEFINE_BLOCK_TYPE(GSCollectionViewCompletionHandlerBlock, void, BOOL);
+
+- (void) performBatchUpdates: (GSCollectionViewPerformBatchUpdatesBlock) updates 
+           completionHandler: (GSCollectionViewCompletionHandlerBlock) completionHandler;
 
 #endif
 
