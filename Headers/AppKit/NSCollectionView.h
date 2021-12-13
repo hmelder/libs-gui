@@ -296,12 +296,14 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
   
   BOOL _allowsMultipleSelection;
   BOOL _isSelectable;
+  BOOL _allowsEmptySelection;
   NSIndexSet *_selectionIndexes;
   
   NSArray *_backgroundColors;
   IBOutlet id <NSCollectionViewDelegate> _delegate;
   IBOutlet id <NSCollectionViewDataSource> _dataSource;
   IBOutlet NSView *_backgroundView;
+  BOOL _backgroundViewScrollsWithContent;
 
   NSSize _itemSize;
   NSSize _maxItemSize;
@@ -321,7 +323,6 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
   NSUInteger _draggingOnIndex;
 
   NSCollectionViewLayout *_collectionViewLayout;
-  BOOL _backgroundViewScrollsWithContent;
 }
 
 - (BOOL) allowsMultipleSelection;
@@ -455,12 +456,33 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
 
 - (NSInteger) numberOfItemsInSection: (NSInteger)section;
 
+/* Inserting, Moving and Deleting Items */
+
+- (void) insertItemsAtIndexPaths: (NSSet *)indexPaths;
+
+- (void) moveItemAtIndexPath: (NSIndexPath *)indexPath 
+                 toIndexPath: (NSIndexPath *)newIndexPath;
+
+- (void) deleteItemsAtIndexPaths: (NSSet *)indexPaths;
+
 /* Inserting, Moving, Deleting and Collapsing Sections */
 
 - (void) insertSections: (NSIndexSet *)sections;
 
 - (void) moveSection: (NSInteger)section 
            toSection: (NSInteger)newSection;
+
+- (void) deleteSections: (NSIndexSet *)sections;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_12, GS_API_LATEST)
+- (IBAction) toggleSectionCollapse: (id)sender;
+#endif
+
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_11, GS_API_LATEST)
+- (BOOL) allowsEmptySelection;
+
+- (void) setAllowsEmptySelection: (BOOL)flag;
 
 
 #endif
