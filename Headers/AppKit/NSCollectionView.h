@@ -301,9 +301,12 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
   NSIndexSet *_selectionIndexes;
   
   NSArray *_backgroundColors;
+
   IBOutlet id <NSCollectionViewDelegate> _delegate;
   IBOutlet id <NSCollectionViewDataSource> _dataSource;
   IBOutlet NSView *_backgroundView;
+  IBOutlet id <NSCollectionViewPrefetching> _prefetchDataSource;
+
   BOOL _backgroundViewScrollsWithContent;
 
   NSSize _itemSize;

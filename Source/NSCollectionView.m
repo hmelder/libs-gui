@@ -1165,4 +1165,249 @@ static NSString *placeholderItem = nil;
   return YES;
 }
 
+/* New methods for later versions of macOS */
+
+// 10.11 methods...
+
+/* Locating Items and Views */
+
+- (NSArray *) visibleItems
+{
+  return nil;
+}
+
+- (NSSet *) indexPathsForVisibleItems
+{
+  return nil;
+}
+
+- (NSArray *) visibleSupplementaryViewsOfKind: (NSCollectionViewSupplementaryElementKind)elementKind
+{
+  return nil;
+}
+
+- (NSSet *) indexPathsForVisibleSupplementaryElementsOfKind: (NSCollectionViewSupplementaryElementKind)elementKind
+{
+  return nil;
+}
+
+- (NSIndexPath *) indexPathForItem: (NSCollectionViewItem *)item
+{
+  return nil;
+}
+
+- (NSIndexPath *) indexPathForItemAtPoint: (NSPoint)point
+{
+  return nil;
+}
+
+- (NSCollectionViewItem *) itemAtIndexPath: (NSIndexPath *)indexPath
+{
+  return nil;
+}
+
+- (NSView *)supplementaryViewForElementKind: (NSCollectionViewSupplementaryElementKind)elementKind 
+                                atIndexPath: (NSIndexPath *)indexPath
+{
+  return nil;
+}
+
+- (void) scrollToItemsAtIndexPaths: (NSSet *)indexPaths 
+                    scrollPosition: (NSCollectionViewScrollPosition)scrollPosition
+{
+}
+
+/* Creating Collection view Items */
+
+- (NSCollectionViewItem *) makeItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier 
+                                     forIndexPath: (NSIndexPath *)indexPath
+{
+  return nil;
+}
+
+- (void) registerClass: (Class)itemClass 
+ forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier
+{
+}
+
+- (void) registerNib: (NSNib *)nib 
+         forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier
+{
+}
+
+- (NSView *) makeSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)elementKind 
+                          withIdentifier: (NSUserInterfaceItemIdentifier)identifier 
+                            forIndexPath: (NSIndexPath *)indexPath
+{
+  return nil;
+}
+
+- (void) registerClass: (Class)viewClass 
+         forSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)kind 
+        withIdentifier:(NSUserInterfaceItemIdentifier)identifier
+{
+}
+
+- (void) registerNib: (NSNib *)nib 
+         forSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)kind 
+      withIdentifier: (NSUserInterfaceItemIdentifier)identifier
+{
+}
+
+/* Providing the collection view's data */
+
+- (id<NSCollectionViewDataSource>) dataSource
+{
+  return _dataSource;
+}
+
+- (void) setDataSource: (id<NSCollectionViewDataSource>)dataSource
+{
+  _dataSource = dataSource;
+}
+
+/* Configuring the Collection view */
+
+- (NSView *) backgroundView
+{
+  return _backgroundView;
+}
+
+- (void) setBackgroundView: (NSView *)backgroundView
+{
+}
+
+- (BOOL) backgroundViewScrollsWithContent
+{
+  return _backgroundViewScrollsWithContent;
+}
+
+/* Reloading Content */
+
+- (void) reloadData
+{
+}
+
+- (void) reloadSections: (NSIndexSet *)sections
+{
+}
+
+- (void) reloadItemsAtIndexPaths: (NSSet *)indexPaths
+{
+}
+
+/* Prefetching Collection View Cells and Data */
+
+- (id<NSCollectionViewPrefetching>) prefetchDataSource
+{
+  return _prefetchDataSource;
+}
+
+- (void) setPrefetchDataSource: (id<NSCollectionViewPrefetching>)prefetchDataSource
+{
+  _prefetchDataSource = prefetchDataSource;
+}
+
+/* Getting the State of the Collection View */
+
+- (NSInteger) numberOfSections
+{
+  return 0;
+}
+
+- (NSInteger) numberOfItemsInSection: (NSInteger)section
+{
+  return 0;
+}
+
+/* Inserting, Moving and Deleting Items */
+
+- (void) insertItemsAtIndexPaths: (NSSet *)indexPaths
+{
+}
+
+- (void) moveItemAtIndexPath: (NSIndexPath *)indexPath 
+                 toIndexPath: (NSIndexPath *)newIndexPath
+{
+}
+
+- (void) deleteItemsAtIndexPaths: (NSSet *)indexPaths
+{
+}
+
+/* Inserting, Moving, Deleting and Collapsing Sections */
+
+- (void) insertSections: (NSIndexSet *)sections
+{
+}
+
+- (void) moveSection: (NSInteger)section 
+           toSection: (NSInteger)newSection
+{
+}
+
+- (void) deleteSections: (NSIndexSet *)sections
+{
+}
+
+// 10.12 method...
+
+- (IBAction) toggleSectionCollapse: (id)sender
+{
+}
+
+// 10.11 methods...
+
+- (BOOL) allowsEmptySelection
+{
+  return _allowsEmptySelection;
+}
+
+- (void) setAllowsEmptySelection: (BOOL)flag;
+{
+  _allowsEmptySelection = flag;
+}
+
+- (NSSet *) selectionIndexPaths // copy
+{
+  return nil;
+}
+
+- (IBAction) selectAll: (id)sender
+{
+}
+
+- (IBAction) deselectAll: (id)sender
+{
+}
+
+- (void) selectItemsAtIndexPaths: (NSSet *)indexPaths 
+                  scrollPosition: (NSCollectionViewScrollPosition)scrollPosition
+{
+}
+
+- (void) deselectItemsAtIndexPaths: (NSSet *)indexPaths
+{
+}
+
+/* Getting Layout Information */
+
+- (NSCollectionViewLayoutAttributes *) layoutAttributesForItemAtIndexPath: (NSIndexPath *)indexPath
+{
+  return nil;
+}
+
+- (NSCollectionViewLayoutAttributes *) layoutAttributesForSupplementaryElementOfKind: (NSCollectionViewSupplementaryElementKind)kind 
+                                                                         atIndexPath: (NSIndexPath *)indexPath
+{
+  return nil;
+}
+
+/* Animating Multiple Changes */
+
+- (void) performBatchUpdates: (GSCollectionViewPerformBatchUpdatesBlock) updates 
+           completionHandler: (GSCollectionViewCompletionHandlerBlock) completionHandler
+{
+}
+
 @end
