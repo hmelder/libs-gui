@@ -340,12 +340,8 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
   NSSet *_indexPathsForSupplementaryElementsOfKind;
 
   // Registered class/nib for item identifier
-  NSMapTable *_registeredNibForItemWithIdentifier;
-  NSMapTable *_registeredClassForItemWithIdentifier;
-
-  // Registered class/nib for item kind & identifier
-  NSMapTable *_registeredNibForItemWithIdentifier;
-  NSMapTable *_registeredClassForItemWithIdentifier;
+  NSMapTable *_registeredNibs;
+  NSMapTable *_registeredClasses;
 }
 
 - (BOOL) allowsMultipleSelection;

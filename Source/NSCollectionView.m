@@ -63,6 +63,9 @@ static NSString* NSCollectionViewSelectableKey               = @"NSSelectable";
 static NSString* NSCollectionViewAllowsMultipleSelectionKey  = @"NSAllowsMultipleSelection";
 static NSString* NSCollectionViewBackgroundColorsKey         = @"NSBackgroundColors";
 static NSString* NSCollectionViewLayoutKey                   = @"NSCollectionViewLayout";
+
+static NSCollectionViewSupplementaryElementKind GSNoSupplementaryElement  = @"GSNoSupplementaryElement"; // private
+
 /*
  * Class variables
  */
@@ -143,8 +146,8 @@ static NSString *placeholderItem = nil;
   _indexPathsForSupplementaryElementsOfKind = [[NSMutableSet alloc] init];
 
   // Registered nib/class
-  _registeredNibForItemWithIdentifier = RETAIN([NSMapTable weakToWeakObjectsMapTable]);
-  _registeredClassForItemWithIdentifier = RETAIN([NSMapTable weakToWeakObjectsMapTable]);
+  _registeredNibs = RETAIN([NSMapTable weakToStrongObjectsMapTable]);
+  _registeredClasses = RETAIN([NSMapTable weakToStrongObjectsMapTable]);
 }
 
 - (void) _resetItemSize
@@ -216,8 +219,8 @@ static NSString *placeholderItem = nil;
   DESTROY(_indexPathsForSupplementaryElementsOfKind);
 
   // Registered nib/class
-  DESTROY(_registeredNibForItemWithIdentifier);
-  DESTROY(_registeredClassForItemWithIdentifier);
+  DESTROY(_registeredNibs);
+  DESTROY(_registeredClasses); 
   
   //DESTROY (_mouseDownEvent);
   [super dealloc];
@@ -1255,15 +1258,17 @@ static NSString *placeholderItem = nil;
 - (void) registerClass: (Class)itemClass 
  forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier
 {
-  [_registeredClassForItemWithIdentifier setObject: itemClass
-                                            forKey: identifier];
+  [self registerClass: itemClass
+        forSupplementaryViewOfKind: GSNoSupplementaryElement
+       withIdentifier: identifier];
 }
 
 - (void) registerNib: (NSNib *)nib 
          forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier
 {
-  [_registeredNibForItemWithIdentifier setObject: nib
-                                          forKey: identifier];  
+  [self registerNib: nib
+        forSupplementaryViewOfKind: GSNoSupplementaryElement
+     withIdentifier: identifier];
 }
 
 - (NSView *) makeSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)elementKind 
@@ -1277,12 +1282,34 @@ static NSString *placeholderItem = nil;
          forSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)kind 
         withIdentifier:(NSUserInterfaceItemIdentifier)identifier
 {
+  NSMapTable *t = nil;
+
+  t = [_registeredClasses objectForKey: kind];
+  if (t == nil)
+    {
+      t = [NSMapTable weakToWeakObjectsMapTable];
+      [_registeredClasses setObject: t
+                             forKey: kind];
+    }
+
+  [t setObject: viewClass forKey: identifier];
 }
 
 - (void) registerNib: (NSNib *)nib 
          forSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)kind 
       withIdentifier: (NSUserInterfaceItemIdentifier)identifier
 {
+  NSMapTable *t = nil;
+  
+  t = [_registeredNibs objectForKey: kind];
+  if (t == nil)
+    {
+      t = [NSMapTable weakToWeakObjectsMapTable];
+      [_registeredNibs setObject: t
+                          forKey: kind];
+    }
+
+  [t setObject: nib forKey: identifier];
 }
 
 /* Providing the collection view's data */
