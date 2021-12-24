@@ -29,8 +29,12 @@
 */
 
 #import "Foundation/NSKeyedArchiver.h"
+
 #import <Foundation/NSGeometry.h>
 #import <Foundation/NSIndexSet.h>
+#import <Foundation/NSSet.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSMapTable.h>
 #import <Foundation/NSKeyedArchiver.h>
 
 #import "AppKit/NSApplication.h"
@@ -129,6 +133,18 @@ static NSString *placeholderItem = nil;
   _items = [[NSMutableArray alloc] init];
   _selectionIndexes = [[NSIndexSet alloc] init];
   _draggingOnIndex = NSNotFound;
+
+  // 10.11 variables
+  
+  // Managing items.
+  _visibleItems = [[NSMutableArray alloc] init];
+  _indexPathsForVisibleItems = [[NSMutableSet alloc] init];
+  _visibleSupplementaryViews = [[NSMutableDictionary alloc] init];
+  _indexPathsForSupplementaryElementsOfKind = [[NSMutableSet alloc] init];
+
+  // Registered nib/class
+  _registeredNibForItemWithIdentifier = RETAIN([NSMapTable weakToWeakObjectsMapTable]);
+  _registeredClassForItemWithIdentifier = RETAIN([NSMapTable weakToWeakObjectsMapTable]);
 }
 
 - (void) _resetItemSize
@@ -192,6 +208,17 @@ static NSString *placeholderItem = nil;
   DESTROY (_backgroundColors);
   DESTROY (_selectionIndexes);
   DESTROY (_items);
+
+  // Managing items.
+  DESTROY(_visibleItems);
+  DESTROY(_indexPathsForVisibleItems);
+  DESTROY(_visibleSupplementaryViews);
+  DESTROY(_indexPathsForSupplementaryElementsOfKind);
+
+  // Registered nib/class
+  DESTROY(_registeredNibForItemWithIdentifier);
+  DESTROY(_registeredClassForItemWithIdentifier);
+  
   //DESTROY (_mouseDownEvent);
   [super dealloc];
 }
@@ -1173,17 +1200,17 @@ static NSString *placeholderItem = nil;
 
 - (NSArray *) visibleItems
 {
-  return nil;
+  return _visibleItems;
 }
 
 - (NSSet *) indexPathsForVisibleItems
 {
-  return nil;
+  return _indexPathsForVisibleItems;
 }
 
 - (NSArray *) visibleSupplementaryViewsOfKind: (NSCollectionViewSupplementaryElementKind)elementKind
 {
-  return nil;
+  return [_visibleSupplementaryViews objectForKey: elementKind];
 }
 
 - (NSSet *) indexPathsForVisibleSupplementaryElementsOfKind: (NSCollectionViewSupplementaryElementKind)elementKind
@@ -1228,11 +1255,15 @@ static NSString *placeholderItem = nil;
 - (void) registerClass: (Class)itemClass 
  forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier
 {
+  [_registeredClassForItemWithIdentifier setObject: itemClass
+                                            forKey: identifier];
 }
 
 - (void) registerNib: (NSNib *)nib 
          forItemWithIdentifier: (NSUserInterfaceItemIdentifier)identifier
 {
+  [_registeredNibForItemWithIdentifier setObject: nib
+                                          forKey: identifier];  
 }
 
 - (NSView *) makeSupplementaryViewOfKind: (NSCollectionViewSupplementaryElementKind)elementKind 

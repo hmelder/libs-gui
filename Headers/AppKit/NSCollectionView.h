@@ -46,6 +46,11 @@
 @class NSPasteboard;
 @class NSNib;
 
+@class NSMapTable;
+@class NSMutableArray;
+@class NSMutableDictionary;
+@class NSMutableSet;
+
 @protocol NSPasteboardWriting;
 
 enum
@@ -327,6 +332,20 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
   NSUInteger _draggingOnIndex;
 
   NSCollectionViewLayout *_collectionViewLayout;
+
+  // Managing items
+  NSArray *_visibleItems;
+  NSSet *_indexPathsForVisibleItems;
+  NSDictionary *_visibleSupplementaryViews;
+  NSSet *_indexPathsForSupplementaryElementsOfKind;
+
+  // Registered class/nib for item identifier
+  NSMapTable *_registeredNibForItemWithIdentifier;
+  NSMapTable *_registeredClassForItemWithIdentifier;
+
+  // Registered class/nib for item kind & identifier
+  NSMapTable *_registeredNibForItemWithIdentifier;
+  NSMapTable *_registeredClassForItemWithIdentifier;
 }
 
 - (BOOL) allowsMultipleSelection;
